@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -22,6 +25,12 @@ public class products {
     private String Quantity;
     private String description;
     @Lob
+    @Basic (fetch=FetchType.LAZY)
     private byte[] image;
+
+    @OneToMany(mappedBy = "product",cascade = CascadeType.REMOVE)
+    private List<CartItem> cartItems=new ArrayList<>();
+
+
 
 }

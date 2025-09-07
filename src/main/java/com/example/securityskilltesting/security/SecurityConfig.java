@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.io.IOException;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
@@ -50,8 +52,12 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/api/auth/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET,"/api/product/getAll").permitAll()
-//                        .requestMatchers(HttpMethod.GET,"/api/cart").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/product/upload").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/api/product/update/**").permitAll()
+
+                        .requestMatchers("/api/cart/**").hasAuthority("USER")
                         .anyRequest().authenticated())
                // .formLogin(form->form
                        // .loginPage("/api/auth/login")
@@ -73,7 +79,6 @@ public class SecurityConfig {
 
     @Bean
     public JWTAuthentificationFilter jwtAuthentificationFilter(){
-
         return new JWTAuthentificationFilter();
     }
 

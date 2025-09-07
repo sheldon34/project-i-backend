@@ -1,5 +1,8 @@
 package com.example.securityskilltesting.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,13 +25,14 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 @OneToOne
+@JsonIgnore
 @JoinColumn(name = "user_id", nullable=false,unique=true)
-
     private UserEntity userEntity;
 
     // Cart.java
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
     private List<CartItem> items=new ArrayList<>();
 
 

@@ -1,6 +1,9 @@
 package com.example.securityskilltesting.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +40,7 @@ public class UserEntity implements UserDetails {
 
 
     @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Cart cart;
 
     @Override

@@ -1,10 +1,15 @@
 package com.example.securityskilltesting.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "cart_item")
@@ -20,6 +25,7 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
+    @JsonBackReference
     private Cart cart;
 
     @ManyToOne(fetch= FetchType.LAZY)
@@ -31,7 +37,6 @@ public class CartItem {
 
 
     private Long unitPrice;
-
 
 
 }
