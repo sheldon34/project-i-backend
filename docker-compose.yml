@@ -1,0 +1,34 @@
+version : '3.8'
+services:
+  db:
+    image: postgres:17
+    container_name: shop-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0001
+      POSTGRES_DB: skills
+    ports:
+      - "5432:5432"
+    networks:
+        - skill-network
+
+  app:
+    build: .
+    container_name: tryshop-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/skills
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 0001
+    networks:
+      - skill-network
+
+networks:
+    skill-network:
+
+
+
