@@ -31,16 +31,8 @@ public class productController {
             @RequestParam("Quantity") String Quantity,
             @RequestParam("image") MultipartFile image
     ) throws IOException {
-
-
-
-
         ProductDto newProduct= productservice.createProduct(name,description,price,Quantity,image);
-
         return  new ResponseEntity<>( newProduct,HttpStatus.CREATED);
-
-
-
     }
 
     ///  getAll products
@@ -50,9 +42,7 @@ public class productController {
         if (productdto.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
         return new ResponseEntity<>(productdto, HttpStatus.OK);
-
     }
 
 
@@ -83,12 +73,8 @@ public class productController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id")  Long id ){
         if (productservice.getProductById(id) != null) {
-
-
             productservice.deleteProduct(id);
         }
         return ResponseEntity.ok("deleted");
     }
-
-
 }
