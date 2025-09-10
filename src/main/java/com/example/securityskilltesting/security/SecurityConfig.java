@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/product/update/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/product/delete/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/api/cart/**").hasAuthority("USER")
+                        .requestMatchers("/api/cart/**").hasAnyAuthority("USER","ADMIN")
                         .anyRequest().authenticated())
                // .formLogin(form->form
                        // .loginPage("/api/auth/login")
