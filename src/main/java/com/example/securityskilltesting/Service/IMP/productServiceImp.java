@@ -1,11 +1,14 @@
 package com.example.securityskilltesting.Service.IMP;
 
+import com.example.securityskilltesting.Cdn.MediaService;
 import com.example.securityskilltesting.Dto.ProductDto;
 import com.example.securityskilltesting.Entity.products;
 import com.example.securityskilltesting.Mapper.ProductMapper;
 import com.example.securityskilltesting.Repo.ProductRepo;
 import com.example.securityskilltesting.Service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,20 +18,14 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 @Service
+@RequiredArgsConstructor
 public class productServiceImp implements ProductService {
-    @Autowired
-    private ProductRepo productrepo;
+
+    private final  ProductRepo productrepo;
+    private final MediaService mediaService;
+
     @Override
     public ProductDto createProduct(String name, String description, Long price, String quantity, MultipartFile image) throws IOException {
-//        try{
-//        products products= ProductMapper.mapToproduct(productdto);
-//        products savedProduct = productrepo.save(products);
-//
-//
-//        return ProductMapper.mapToproductDto(savedProduct);}
-//        catch(Exception e){
-//            throw  new RuntimeException(e.getMessage());
-//        }
 
         products product=new products();
         product.setName(name);
@@ -36,8 +33,13 @@ public class productServiceImp implements ProductService {
         product.setPrice(price);
         product.setQuantity(quantity);
 
-        if (!image.isEmpty()) {
-            product.setImage(image.getBytes());
+//        if (!image.isEmpty()) {
+//            product.setImage(image.getBytes());
+//        }
+        if (image !=null && !image.isEmpty()) {
+            String key=mediaService.uploadFile(image);
+            String imageUrl= mediaService.getPublicUrl(key);
+            product.setImageUrl(imageUrl);
         }
         products savedproducts= productrepo.save(product);
 
@@ -70,19 +72,25 @@ public class productServiceImp implements ProductService {
         if(product.getQuantity() !=null){
             product.setQuantity(quantity);}
 
-
-        if(image != null && !image.isEmpty()) {
-            product.setImage(image.getBytes());
+//
+//        if(image != null && !image.isEmpty()) {
+//            product.setImage(image.getBytes());
+//        }
+        if (image !=null && !image.isEmpty()){
+            String newKey= mediaService.updateFile(product.getImageUrl(),image);
+            product.setImageUrl(newKey);
         }
-
-
         products updatedProduct = productrepo.save(product);
 
-        return com.example.securityskilltesting.Mapper.ProductMapper.mapToproductDto(updatedProduct);
+        return ProductMapper.mapToproductDto(updatedProduct);
     }
     ///deleting a products
     @Override
     public void deleteProduct(Long productId) {
+        products product=productrepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+        if (product.getImageUrl() !=null){
+            mediaService.deleteFile(product.getImageUrl());
+        }
         productrepo.deleteById(productId);
 
     }

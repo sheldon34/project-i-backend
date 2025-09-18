@@ -24,9 +24,8 @@ public class products {
     private Long price;
     private String Quantity;
     private String description;
-    @Lob
-    @Basic (fetch=FetchType.LAZY)
-    private byte[] image;
+    private String imageUrl;
+
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.REMOVE)
     private List<CartItem> cartItems=new ArrayList<>();

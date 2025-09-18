@@ -14,9 +14,11 @@ public class ProductMapper {
         productDto.setPrice(products.getPrice());
         productDto.setDescription(products.getDescription());
         productDto.setQuantity(products.getQuantity());
-        if (products.getImage()!=null){
-            productDto.setImage(Base64.getEncoder().encodeToString(products.getImage()));
-        };
+//        if (products.getImage()!=null){
+//            productDto.setImage(Base64.getEncoder().encodeToString(products.getImage()));
+//        }
+
+        productDto.setImageUrl(products.getImageUrl());
 
 
 
@@ -30,9 +32,10 @@ public class ProductMapper {
         products.setPrice(productDto.getPrice());
         products.setDescription(productDto.getDescription());
         products.setQuantity(productDto.getQuantity());
-        if (productDto.getImage()!=null){
-            products.setImage(Base64.getDecoder().decode(productDto.getImage()));
-        }
+        products.setImageUrl(productDto.getImageUrl());
+//        if (productDto.getImage()!=null){
+//            products.setImage(Base64.getDecoder().decode(productDto.getImage()));
+//        }
 
 
 
