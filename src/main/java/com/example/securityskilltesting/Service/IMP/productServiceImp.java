@@ -78,7 +78,8 @@ public class productServiceImp implements ProductService {
 //        }
         if (image !=null && !image.isEmpty()){
             String newKey= mediaService.updateFile(product.getImageUrl(),image);
-            product.setImageUrl(newKey);
+            String imageUrl= mediaService.getPublicUrl(newKey);
+            product.setImageUrl(imageUrl);
         }
         products updatedProduct = productrepo.save(product);
 
