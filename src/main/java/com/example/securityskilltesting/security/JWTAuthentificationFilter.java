@@ -40,34 +40,34 @@ private UserDetailService userDetailService;
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-        try{
-        String token=getJWTFromRequest(request);
-        if(StringUtils.hasText(token)&&tokenGenerator.validateToken(token)){
+        try {
+            String token = getJWTFromRequest(request);
+            if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
 //            String username=tokenGenerator.getUsernameFromJWT((token));
 
-            Claims claims= Jwts.parser()
-                    .setSigningKey(SecurityConstants.JWT_SECRET)
-                    .parseClaimsJws(token)
-                    .getBody();
-            String username=claims.getSubject();
-            List<String> roles=claims.get("roles", List.class);
-            List<GrantedAuthority> authorities=roles !=null ?
-                    roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()):
-                    List.of();
-            UserDetails userDetails=userDetailService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails,
-                    null,authorities);
-authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
+                Claims claims = Jwts.parser()
+                        .setSigningKey(SecurityConstants.JWT_SECRET)
+                        .parseClaimsJws(token)
+                        .getBody();
+                String username = claims.getSubject();
+                List<String> roles = claims.get("roles", List.class);
+                List<GrantedAuthority> authorities = roles != null ?
+                        roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()) :
+                        List.of();
+                UserDetails userDetails = userDetailService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
 
-        log.info("Jwt header: {}",request.getHeader("Authorization"));
-        log.info("Jwt username: {}",SecurityContextHolder.getContext().getAuthentication());
-
-filterChain.doFilter(request,response);}
-        catch (Exception e){
-            log.error("jwt filter error ",e);
+            log.info("Jwt header: {}", request.getHeader("Authorization"));
+            log.info("Jwt username: {}", SecurityContextHolder.getContext().getAuthentication());
+        } catch (Exception e) {
+//            log.error("jwt filter error ",e.getMessage(),e.getMessage());
+            log.error("jwt filter error: {} - {}", e.getClass().getName(), e.getMessage(), e);
         }
+        filterChain.doFilter(request, response);
     }
     private String getJWTFromRequest(HttpServletRequest request){
         String bearerToken=request.getHeader("Authorization");

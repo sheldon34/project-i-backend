@@ -53,7 +53,12 @@ if (userRepo.existsByUsername(registerDto.getUsername())){
     //encoding the user
 userEntity.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        RolesEntity rolesEntity=roleRepo.findByName("USER").get();
+        RolesEntity rolesEntity = roleRepo.findByName("USER")
+                .orElseGet(() -> {
+                    RolesEntity userRole = new RolesEntity();
+                    userRole.setName("USER");
+                    return roleRepo.save(userRole);
+                });
         userEntity.setRoles(Collections.singletonList(rolesEntity));
 
         userRepo.save(userEntity);
