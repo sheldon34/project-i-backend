@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/payments")
+@RequestMapping({"/api/payments", "/api/payment/mpesa", "/api/payment", "/api/mpesa", "/mpesa"})
 @Slf4j
 @RequiredArgsConstructor
 public class MpesaController {
@@ -25,17 +25,28 @@ public class MpesaController {
             return ResponseEntity.ok(mpesaService.generateAccessToken());
         }
         catch(Exception e){
-            log.error(e.getMessage());
-            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/stk-push")
-    public ResponseEntity<STKPushResponse> stkPush(@RequestBody Map<String,String> payload){
-        try{
-            return ResponseEntity.ok(mpesaService.initiateSTKPush(payload.get("phoneNumber"),payload.get("amount")));
 
+    @PostMapping("/stk-push")
+    public ResponseEntity<STKPushResponse> stkPush(@RequestBody Map<String, Object> payload){
+        try{
+            Object phoneObj = payload != null ? payload.get("phoneNumber") : null;
+            if (phoneObj == null && payload != null) phoneObj = payload.get("phone");
+            if (phoneObj == null && payload != null) phoneObj = payload.get("phone_number");
+            if (phoneObj == null && payload != null) phoneObj = payload.get("PhoneNumber");
+
+            Object amountObj = payload != null ? payload.get("amount") : null;
+            if (amountObj == null && payload != null) amountObj = payload.get("Amount");
+
+            String phoneNumber = phoneObj != null ? String.valueOf(phoneObj).trim() : null;
+            String amount = amountObj != null ? String.valueOf(amountObj).trim() : null;
+
+            return ResponseEntity.ok(mpesaService.initiateSTKPush(phoneNumber, amount));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("STK push error: {}", e.getMessage(), e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -59,9 +59,26 @@ public class MpesaService {
     public STKPushResponse initiateSTKPush(String phoneNumber, String amount) throws IOException {
         if (phoneNumber == null || phoneNumber.isBlank()) {
             throw new IllegalArgumentException("Phone number is required ");
-
         }
-        phoneNumber = phoneNumber.startsWith("0") ? phoneNumber.replaceFirst("0", "254") : phoneNumber;
+        phoneNumber = phoneNumber.trim().replace(" ", "").replace("-", "");
+        if (phoneNumber.startsWith("+")) {
+            phoneNumber = phoneNumber.substring(1);
+        }
+        if (phoneNumber.startsWith("0")) {
+            phoneNumber = "254" + phoneNumber.substring(1);
+        }
+
+        if (amount == null || amount.isBlank()) {
+            amount = "1";
+        } else {
+            amount = amount.trim();
+            if (amount.contains(".")) {
+                try {
+                    amount = String.valueOf((long) Double.parseDouble(amount));
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
 
         AccessTokenResponse accessTokenResponse = generateAccessToken();
 
