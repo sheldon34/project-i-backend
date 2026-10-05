@@ -29,9 +29,6 @@ public class UserDetailService implements UserDetailsService {
         return  new User(users.getUsername(),users.getPassword(),mapRolesToAuthorities(users.getRoles()));
     }
     private Collection<GrantedAuthority>mapRolesToAuthorities(List<RolesEntity>roles){
-        if (roles == null) {
-            return List.of();
-        }
         return roles.stream().map(role-> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 }

@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.example.securityskilltesting.Entity.Cart;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -47,12 +45,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (roles == null) {
-            return List.of();
-        }
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        return List.of();
     }
 
     @Override

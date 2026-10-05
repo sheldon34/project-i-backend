@@ -1,5 +1,6 @@
 package com.example.securityskilltesting.security;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,12 +19,13 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.addAllowedOriginPattern("https://project-i-frontend-6m7l.vercel.app");
         config.addAllowedOriginPattern("https://project-i-frontend-kappa.vercel.app");
-        config.addAllowedOriginPattern("https://*.vercel.app");
-        config.addAllowedOriginPattern("http://localhost:[*]");
-        config.addAllowedOriginPattern("http://127.0.0.1:[*]");
+        config.addAllowedOriginPattern("https://project-i-frontend-*.vercel.app");
+        config.addAllowedOriginPattern("http://localhost:5173");
+        config.addAllowedOriginPattern("http://localhost:5174");
+        config.addAllowedOriginPattern("http://localhost:3000");
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
         config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("Authorization", "Content-Disposition", "Content-Type"));
+        config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
@@ -34,4 +36,5 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         return new CorsFilter(corsConfigurationSource());
     }
+
 }
