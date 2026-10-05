@@ -60,17 +60,18 @@ public class productServiceImp implements ProductService {
 
 
         products product = productrepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
-        if (product.getName() !=null){
-
-            product.setName(product.getName());}
-        if(product.getDescription() !=null){
-            product.setDescription(description);}
-        if(product.getPrice() !=null){
-
+        if (name != null) {
+            product.setName(name);
+        }
+        if (description != null) {
+            product.setDescription(description);
+        }
+        if (price != null) {
             product.setPrice(price);
         }
-        if(product.getQuantity() !=null){
-            product.setQuantity(quantity);}
+        if (quantity != null) {
+            product.setQuantity(quantity);
+        }
 
 //
 //        if(image != null && !image.isEmpty()) {

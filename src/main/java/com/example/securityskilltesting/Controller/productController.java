@@ -24,15 +24,16 @@ public class productController {
     ///  uploading products
     @PostMapping("/upload")
     public ResponseEntity<ProductDto> createProduct(
-//@RequestBody ProductDto productdto,
             @RequestParam("name") String name,
-            @RequestParam("description") String description,
+            @RequestParam(value = "description", required = false) String description,
             @RequestParam("price") Long price,
-            @RequestParam("Quantity") String Quantity,
-            @RequestParam("image") MultipartFile image
+            @RequestParam(value = "Quantity", required = false) String quantityUpper,
+            @RequestParam(value = "quantity", required = false) String quantityLower,
+            @RequestParam(value = "image", required = false) MultipartFile image
     ) throws IOException {
-        ProductDto newProduct= productservice.createProduct(name,description,price,Quantity,image);
-        return  new ResponseEntity<>( newProduct,HttpStatus.CREATED);
+        String resolvedQuantity = quantityLower != null ? quantityLower : (quantityUpper != null ? quantityUpper : "1");
+        ProductDto newProduct = productservice.createProduct(name, description, price, resolvedQuantity, image);
+        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
     }
 
     ///  getAll products
@@ -60,11 +61,12 @@ public class productController {
                                                    @RequestParam(value = "name",required = false) String name,
                                                    @RequestParam(value = "description",required = false) String description,
                                                    @RequestParam(value = "price", required = false) Long price,
-                                                   @RequestParam(value = "Quantity" ,required = false) String Quantity,
+                                                   @RequestParam(value = "Quantity" ,required = false) String quantityUpper,
+                                                   @RequestParam(value = "quantity" ,required = false) String quantityLower,
                                                    @RequestParam(value = "image", required = false) MultipartFile image
     )throws IOException {
-
-        ProductDto updatedProduct = productservice.updateProduct(name, description, price, Quantity, id, image);
+        String resolvedQuantity = quantityLower != null ? quantityLower : quantityUpper;
+        ProductDto updatedProduct = productservice.updateProduct(name, description, price, resolvedQuantity, id, image);
         return ResponseEntity.ok(updatedProduct);
     }
 
