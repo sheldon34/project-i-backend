@@ -58,7 +58,7 @@ return token;
             Jwts.parser().setSigningKey(SecurityConstants.JWT_SECRET).parseClaimsJws(token);
             return true;
         }catch (Exception e){
-            throw new AuthenticationCredentialsNotFoundException("jwt was incorrect or exipired");
+            throw new AuthenticationCredentialsNotFoundException("jwt was incorrect or expired");
         }
     }
 }

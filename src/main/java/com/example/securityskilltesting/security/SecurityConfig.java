@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/mpesa/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/product/getAll").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/product/upload").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT,"/api/product/update/**").hasAuthority("ADMIN")
